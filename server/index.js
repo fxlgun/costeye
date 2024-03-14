@@ -1,10 +1,13 @@
 // Require necessary modules
 const express = require('express');
+const cors = require('cors');
 const { scrapeAmazonPrice } = require('./scrape');
 
 // Create Express app
 const app = express();
 app.use(express.json());
+app.use(cors())
+
 
 // Routes
 app.get('/', (req, res) => {

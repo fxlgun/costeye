@@ -1,49 +1,23 @@
-import cheerio, { load } from 'cheerio';
 
-export async function scrapeAmazonPrice(url) {
-    let finalPrice = null;
-    try {
-        const response = await fetch(url);
-        const html = await response.text();
 
-        const $ = load(html);
+export const scrapeAmazonPrice = async (url) => {
+    const myHeaders = new Headers();
+    myHeaders.append("Content-Type", "application/json");
 
-        // Find the element containing the price
-        const priceElement = $('span.a-price-whole');
+    const raw = JSON.stringify({
+        "url": url
+    });
 
-        // Extract the price text
-        const price = priceElement.text().trim();
-        console.log(price);
-        // Convert price to a proper integer
-        finalPrice = parseInt(price.split('.')[0].split(',').join(''));
-    } catch (error) {
-        console.error('Error fetching data:', error);
-    }
-    return finalPrice;
+    const requestOptions = {
+        method: "POST",
+        headers: myHeaders,
+        body: raw,
+        redirect: "follow"
+    };
+
+    const response = await fetch("https://costeye.vercel.app/scrape", requestOptions)
+        .then((response) => response.json())
+
+    return response.price
+
 }
-
-export async function scrapeFlipkartPrice(url) {
-    try {
-        const newUrl = 'https://www.amazon.in/iQOO-MediaTek-Dimesity-Processor-Smartphone/dp/B07WGPKLFL'
-        const response = await fetch(newUrl);
-        if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
-        }
-        const html = await response.text();
-        console.log(html);
-        const $ = load(html);
-
-        // Find the div containing the price
-        const priceElement = $('div._30jeq3._16Jk6d');
-        console.log(priceElement.text());
-        // Extract the price text
-        const price = priceElement.text().trim().split('₹')[1];
-
-        return price;
-    } catch (error) {
-        console.error('Error fetching data:', error);
-        return null;
-    }
-}
-
-
