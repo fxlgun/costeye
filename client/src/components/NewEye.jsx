@@ -27,18 +27,8 @@ const NewEye = () => {
         currentPrice: null,
     })
 
-    const handleUrlChange = async (e) => {
-        const url = e.target.value.split('?')[0]
-        setEyeData({ ...eyeData, url: url })
-        const currentPrice = await scrapeAmazonPrice(url)
-        if (typeof (currentPrice) === "number") {
-            setEyeData({ ...eyeData, currentPrice: currentPrice })
+    const [loading, setLoading] = useState(false)
 
-        }
-        else {
-            setEyeData({ ...eyeData, currentPrice: null })
-        }
-    }
 
     return (
         <>
@@ -68,19 +58,19 @@ const NewEye = () => {
 
                                 <FormControl className='animate-top' id="name">
                                     <FormLabel>Product Name</FormLabel>
-                                    <Input type="text" onChange={(e) => setEyeData({ ...eyeData, name: e.target.value })} />
+                                    <Input type="text" value={eyeData.name} onChange={(e) => setEyeData({ ...eyeData, name: e.target.value })} />
                                 </FormControl>
                                 <FormControl className='animate-top' id="category">
                                     <FormLabel>Store</FormLabel>
-                                    <CategoryRadio setEyeData={setEyeData} eyeData={eyeData} />
+                                    <CategoryRadio value={eyeData.category} setEyeData={setEyeData} eyeData={eyeData} />
                                 </FormControl>
                                 <FormControl className='animate-top' id="url">
                                     <FormLabel>Product URL</FormLabel>
-                                    <Input type="text" onChange={handleUrlChange} />
+                                    <Input value={eyeData.url} type="text" onChange={(e) => setEyeData({ ...eyeData, url: e.target.value.split('?')[0] })} />
                                 </FormControl>
                                 <Stack className='animate-top' spacing={6}>
-                                    {eyeData.url !== null && eyeData.url !== '' && <Text> {eyeData.currentPrice === null ? <Spinner size={'sm'} /> : `Current Price: ${eyeData.currentPrice}`} </Text>}
-                                    <Button colorScheme={'blue'} variant={'solid'}>
+                                    {<Text> {loading ? <Spinner size={'sm'} /> : `Current Price: ${eyeData.currentPrice}`} </Text>}
+                                    <Button colorScheme={'blue'} variant={'solid'} onClick={async () => { setLoading(true); const price = await scrapeAmazonPrice(eyeData.url); setEyeData({ ...eyeData, currentPrice: price }); setLoading(false) }}>
                                         Add Eye
                                     </Button>
                                 </Stack>
