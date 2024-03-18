@@ -15,6 +15,7 @@ import { onAuthStateChanged } from 'firebase/auth'
 import { useNavigate } from 'react-router-dom'
 import { auth } from '../firebase'
 import { GoogleApi } from '../utils/auth'
+import toast from 'react-hot-toast'
 
 const Login = () => {
     const [loading, setLoading] = useState(true)
