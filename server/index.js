@@ -16,6 +16,7 @@ app.get('/', (req, res) => {
 });
 
 app.post('/scrape', async (req, res) => {
+  console.log(req.body);
   const url = req.body.url;
   try {
     const price = await scrapeAmazonPrice(url);

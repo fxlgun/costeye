@@ -134,7 +134,7 @@ html {
 }
 
 .up-n-down{
-  animation-name: scroll;
+  /* animation-name: scroll; */
   animation-duration: 10s;
   animation-iteration-count: infinite;
   animation-delay: 10000ms;
